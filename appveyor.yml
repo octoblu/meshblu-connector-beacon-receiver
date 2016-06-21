@@ -18,10 +18,10 @@ install:
   - npm install --build-from-source
 build: off
 test_script:
-  - npm test
-before_deploy:
   - ps: >-
       $env:SKIP_REQUIRE_BLEACON="true"
+  - npm test
+before_deploy:
   - ps: >-
       if($env:platform -eq "x86") {
         $env:PACKAGER_ARCH="386"
