@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-beacon-receiver",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/meshblu-connector-beacon-receiver",
   "bugs": "https://github.com/octoblu/meshblu-connector-beacon-receiver/issues",
@@ -36,11 +36,11 @@
     "lodash": "^4.13.1",
     "meshblu-config": "^4.0.0",
     "meshblu-connector-runner": "^7.0.0",
+    "meshblu-connector-schema-generator": "^2.0.0",
     "moment": "^2.13.0"
   },
   "meshbluConnector": {
-    "githubSlug": "octoblu/meshblu-connector-beacon-receiver",
-    "schemasUrl": "https://file-downloader.octoblu.com/github-release/octoblu/meshblu-connector-beacon-receiver/v1.0.0/schemas.json"
+    "githubSlug": "octoblu/meshblu-connector-beacon-receiver"
   },
   "platformDependencies": {
     "darwin": [],

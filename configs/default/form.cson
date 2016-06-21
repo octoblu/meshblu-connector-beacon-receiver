@@ -1,0 +1,10 @@
+angular: [
+  { key: 'options.scanImmediately' }
+  { key: 'options.broadcastProximityChange' }
+  { key: 'options.broadcastRssiChange' }
+  { key: 'options.rssiDelta' }
+  { key: 'options.uuid' }
+  { key: 'options.major' }
+  { key: 'options.minor' }
+  { key: 'options.timeout' }
+]
