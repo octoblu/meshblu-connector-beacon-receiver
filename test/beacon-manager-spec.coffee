@@ -1,17 +1,16 @@
 _ = require 'lodash'
 BeaconManager = require '../src/beacon-manager'
+{EventEmitter} = require 'events'
 
 describe 'BeaconManager', ->
   beforeEach ->
     @sut = new BeaconManager
     {@Bleacon} = @sut
+    @Bleacon.stopScanning = sinon.stub()
+    @Bleacon.startScanning = sinon.stub()
+    @Bleacon.clearBeacons = sinon.stub()
 
   describe '->connect', ->
-    beforeEach ->
-      @Bleacon.stopScanning = sinon.stub()
-      @Bleacon.startScanning = sinon.stub()
-      @Bleacon.clearBeacons = sinon.stub()
-
     context 'without uuid', ->
       beforeEach (done) ->
         options =

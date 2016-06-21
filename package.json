@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-beacon-receiver",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/meshblu-connector-beacon-receiver",
   "bugs": "https://github.com/octoblu/meshblu-connector-beacon-receiver/issues",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "meshblu-connector-runner",
-    "test": "mocha || mocha",
+    "test": "mocha",
     "generate:package": "meshblu-connector-packager",
     "generate:schema": "meshblu-connector-schema-generator > schemas.json"
   },

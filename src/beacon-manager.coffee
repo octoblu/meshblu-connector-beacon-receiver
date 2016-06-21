@@ -1,11 +1,17 @@
 _              = require 'lodash'
 {EventEmitter} = require 'events'
 async          = require 'async'
-Bleacon        = require '@octoblu/bleacon'
 Beacon         = require './beacon'
+try
+  if process.env.SKIP_REQUIRE_BLEACON == 'true'
+    Bleacon = new EventEmitter
+  else
+    Bleacon = require '@octoblu/bleacon'
+catch error
+  console.error error
 
 class BeaconManager extends EventEmitter
-  constructor: ->
+  constructor: (dependencies={}) ->
     # Hook for testing
     @Bleacon = Bleacon
     @beacons = []
