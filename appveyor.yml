@@ -16,10 +16,9 @@ install:
   - if "%PLATFORM%" == "x64" set PATH=C:\Python27-x64;%PATH%
   - if "%PLATFORM%" == "x86" SET PATH=C:\python27;%PATH%
   - npm install --build-from-source
+  - SET SKIP_REQUIRE_BLEACON=true
 build: off
 test_script:
-  - ps: >-
-      $env:SKIP_REQUIRE_BLEACON="true"
   - npm test
 before_deploy:
   - ps: >-
