@@ -1,0 +1,53 @@
+title: "Default Configuration"
+type: "object"
+properties:
+  options:
+    type: "object"
+    properties:
+      timeout:
+        title: "Timeout (in seconds)"
+        description: "Timeout to detect when beacon is out of range"
+        type: "number"
+        default: 3
+      rssiDelta:
+        title: "rssi Delta (in dBm)"
+        description: "Check to see if rssi change is within +/- this number, only used when broadcastRssiChange is true"
+        type: "number"
+        default: 5
+      broadcastRssiChange:
+        title: "Broadcast rssi Change"
+        description: "Broadcast when the rssi change exceeds the tolerance"
+        type: "boolean"
+        default: false
+      broadcastProximityChange:
+        title: "Broadcast proximity Change"
+        description: "Broadcast when the proximity changes"
+        type: "boolean"
+        default: true
+      scanImmediately:
+        title: "Scan Immediately"
+        description: "Start scanning immediately on startup"
+        type: "boolean"
+        default: true
+      uuid:
+        title: "UUID"
+        description: 'Optional: If left blank, will scan for any available beacons in range'
+        type: "string"
+      major:
+        title: "Major (0 - 65535)"
+        description: 'Optional'
+        type: "integer"
+      minor:
+        title: "Minor (0 - 65535)"
+        description: 'Optional'
+        type: "integer"
+    required: [
+      "timeout"
+      "rssiDelta"
+      "scanImmediately"
+      "broadcastProximityChange"
+      "broadcastRssiChange"
+    ]
+required: [
+  "options"
+]
