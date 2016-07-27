@@ -1,6 +1,6 @@
 {
   "name": "meshblu-connector-beacon-receiver",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Meshblu Connector ",
   "homepage": "https://github.com/octoblu/meshblu-connector-beacon-receiver",
   "bugs": "https://github.com/octoblu/meshblu-connector-beacon-receiver/issues",
