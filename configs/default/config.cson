@@ -44,9 +44,6 @@ properties:
     required: [
       "timeout"
       "rssiDelta"
-      "scanImmediately"
-      "broadcastProximityChange"
-      "broadcastRssiChange"
     ]
 required: [
   "options"
