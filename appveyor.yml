@@ -19,7 +19,7 @@ install:
   - SET SKIP_REQUIRE_BLEACON=true
 build: off
 test_script:
-  - npm test
+  - node_modules/.bin/mocha
 before_deploy:
   - ps: >-
       if($env:platform -eq "x86") {
