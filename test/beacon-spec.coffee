@@ -1,6 +1,6 @@
 Beacon = require '../src/beacon'
 
-describe.only 'Beacon', ->
+describe 'Beacon', ->
   beforeEach ->
     options =
       broadcastProximityChange: true
@@ -9,16 +9,16 @@ describe.only 'Beacon', ->
     @sut = new Beacon options
     @sut._emit = sinon.stub()
 
-  afterEach (done) ->
-    @sut.close done
+  afterEach ->
+    @sut.close()
 
   describe '->update', ->
     context 'the first update', ->
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -53
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
       it 'should set @beacon', ->
         expect(@sut.beacon).to.deep.equal rssi: -53, proximity: 'near'
@@ -33,17 +33,17 @@ describe.only 'Beacon', ->
         expect(@sut._emit).to.have.been.calledWith 'data', rssi: -53, proximity: 'near'
 
     context 'the second update, with rssi in the delta', ->
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -53
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -50
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
       it 'should set @beacon', ->
         expect(@sut.beacon).to.deep.equal rssi: -50, proximity: 'near'
@@ -58,17 +58,17 @@ describe.only 'Beacon', ->
         expect(@sut._emit).to.have.been.calledWith 'data', rssi: -53, proximity: 'near'
 
     context 'the second update, with rssi outside the delta', ->
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -53
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -30
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
       it 'should set @beacon', ->
         expect(@sut.beacon).to.deep.equal rssi: -30, proximity: 'near'
@@ -84,17 +84,17 @@ describe.only 'Beacon', ->
         expect(@sut._emit).to.have.been.calledWith 'data', rssi: -30, proximity: 'near'
 
     context 'the second update, with proxmity change', ->
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -53
           proximity: 'near'
-        @sut.update options, done
+        @sut.update options
 
-      beforeEach (done) ->
+      beforeEach ->
         options =
           rssi: -53
           proximity: 'immediate'
-        @sut.update options, done
+        @sut.update options
 
       it 'should set @beacon', ->
         expect(@sut.beacon).to.deep.equal rssi: -53, proximity: 'immediate'
@@ -109,12 +109,12 @@ describe.only 'Beacon', ->
         expect(@sut._emit).to.have.been.calledWith 'data', rssi: -53, proximity: 'immediate'
 
   describe '->is', ->
-    beforeEach (done) ->
+    beforeEach ->
       options =
         uuid: 'the-uuid'
         major: 'mr-major-sir'
         minor: 'a-minor'
-      @sut.update options, done
+      @sut.update options
 
     context 'when matching', ->
       it 'should return true', ->

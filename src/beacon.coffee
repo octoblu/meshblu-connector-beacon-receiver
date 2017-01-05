@@ -7,14 +7,14 @@ class Beacon extends EventEmitter
     @_emit = _.throttle @emit, 500, {leading: true, trailing: false}
     @_initializeGoneInterval()
 
-  initialize:  => 
+  initialize: =>
     @_emitData @beacon, true
-    
-  close: () =>
+
+  close: =>
     clearInterval @_intervalGone
     @beacon.major = -1 # Mark this class for destruction
 
-  isAlive: () =>
+  isAlive: =>
     return true unless @beacon.major == -1
     return false
 
@@ -52,10 +52,10 @@ class Beacon extends EventEmitter
     @_emitData _.defaults defaults, @beacon
     @close()
 
-  update: (@beacon, callback=_.noop) =>
+  update: (@beacon) =>
     return unless @beacon?
     @updatedAt = moment()
-    return callback() unless @_hasRssiChanged() || @_hasProximityChanged()
+    return unless @_hasRssiChanged() || @_hasProximityChanged()
     {@rssi, @proximity} = @beacon
     @_emitData @beacon
 
