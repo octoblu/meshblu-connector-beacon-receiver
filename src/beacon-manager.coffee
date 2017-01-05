@@ -16,6 +16,13 @@ class BeaconManager extends EventEmitter
     @Bleacon = Bleacon
     @beacons = []
     @Bleacon.on 'discover', @_onDiscover
+    @_intervalCleanup = setInterval @cleanupArray, 10 * 1000  # Check every 10 sec if we need to cleanup the array 
+
+  cleanupArray: =>
+    @beacons_alive = []
+    for beacon in @beacons
+       @beacons_alive.push beacon if beacon.isAlive()
+    @beacons = @beacons_alive
 
   clearBeacons: (callback) =>
     async.each @beacons, (beacon, done) =>
@@ -63,6 +70,7 @@ class BeaconManager extends EventEmitter
 
     beacon = new Beacon {beacon: data, @broadcastProximityChange, @broadcastRssiChange, @rssiDelta, @timeout}
     beacon.on 'data', @_onData
+    beacon.initialize 
     @beacons.push beacon
 
 module.exports = BeaconManager
