@@ -2,13 +2,13 @@ _              = require 'lodash'
 moment         = require 'moment'
 {EventEmitter} = require 'events'
 
-class Beacon extends EventEmiatter
+class Beacon extends EventEmitter
   constructor: ({ @beacon, @broadcastProximityChange, @broadcastRssiChange, @rssiDelta, @timeout }={}) ->
     @_emit = _.throttle @emit, 500, {leading: true, trailing: false}
     @_initializeGoneInterval()
 
   initialize:  => 
-    @_emitData @beacon, true
+    @_emitData @beacon
     
   close: () =>
     clearInterval @_intervalGone
@@ -64,7 +64,7 @@ class Beacon extends EventEmiatter
     {@rssi, @proximity} = @beacon
     @_emitData @beacon
 
-  _emitData: (data, noThrottle=false) =>
+  _emitData: (data) =>
     fields = [
       'uuid'
       'major'
@@ -74,10 +74,7 @@ class Beacon extends EventEmiatter
       'accuracy'
       'proximity'
     ]
-    if noThrottle
-      @emit 'data', _.pick data, fields
-    else  
-      @_emit 'data', _.pick data, fields
+    @_emit 'data', _.pick data, fields
 
 
 module.exports = Beacon
