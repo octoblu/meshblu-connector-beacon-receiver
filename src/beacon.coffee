@@ -2,20 +2,19 @@ _              = require 'lodash'
 moment         = require 'moment'
 {EventEmitter} = require 'events'
 
-class Beacon extends EventEmitter
+class Beacon extends EventEmiatter
   constructor: ({ @beacon, @broadcastProximityChange, @broadcastRssiChange, @rssiDelta, @timeout }={}) ->
     @_emit = _.throttle @emit, 500, {leading: true, trailing: false}
     @_initializeGoneInterval()
 
-  initialize: =>
+  initialize:  => 
     @_emitData @beacon, true
-
-  close: =>
+    
+  close: () =>
     clearInterval @_intervalGone
-    @beacon.major = -1 # Mark this class for destruction
 
-  isAlive: =>
-    return true unless @beacon.major == -1
+  isAlive: () =>
+    return true unless @isGone
     return false
 
   is: (matchBeacon) =>
@@ -29,7 +28,7 @@ class Beacon extends EventEmitter
     return false unless @broadcastProximityChange
     return true unless @proximity?
     return true unless @beacon?.proximity?
-    @proximity != @beacon.proximity
+    @proximity != @beacon.proximity   
 
   _hasRssiChanged: =>
     return false unless @broadcastRssiChange
@@ -38,12 +37,16 @@ class Beacon extends EventEmitter
     ! _.inRange @beacon.rssi, @rssi - @rssiDelta, @rssi + @rssiDelta
 
   _initializeGoneInterval: =>
+    @isGone = false
     return unless @timeout > 0
     @_intervalGone = setInterval @_checkIfGone, 500
 
   _checkIfGone: =>
     since = moment().subtract @timeout, 'seconds'
     return if moment(@updatedAt).isAfter since
+    @isGone = true
+    @rssi = 0
+    @proximity = 'gone'
     defaults =
       proximity: 'gone'
       measuredPower: 0
@@ -52,14 +55,16 @@ class Beacon extends EventEmitter
     @_emitData _.defaults defaults, @beacon
     @close()
 
-  update: (@beacon) =>
+  update: (@beacon, callback=_.noop) =>
     return unless @beacon?
     @updatedAt = moment()
-    return unless @_hasRssiChanged() || @_hasProximityChanged()
+    if @isGone 
+        @_initializeGoneInterval() 
+    return callback() unless @_hasRssiChanged() || @_hasProximityChanged()
     {@rssi, @proximity} = @beacon
     @_emitData @beacon
 
-  _emitData: (data) =>
+  _emitData: (data, noThrottle=false) =>
     fields = [
       'uuid'
       'major'
@@ -69,6 +74,10 @@ class Beacon extends EventEmitter
       'accuracy'
       'proximity'
     ]
-    @_emit 'data', _.pick data, fields
+    if noThrottle
+      @emit 'data', _.pick data, fields
+    else  
+      @_emit 'data', _.pick data, fields
+
 
 module.exports = Beacon
