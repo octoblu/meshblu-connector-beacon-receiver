@@ -8,12 +8,11 @@ class Beacon extends EventEmitter
     @_initializeGoneInterval()
 
   initialize:  => 
-    @_emitData @beacon, _.noop, true
+    @_emitData @beacon, true
     
-  close: (callback=_.noop) =>
+  close: () =>
     clearInterval @_intervalGone
     @beacon.major = -1 # Mark this class for destruction
-    callback()
 
   isAlive: () =>
     return true unless @beacon.major == -1
@@ -58,9 +57,9 @@ class Beacon extends EventEmitter
     @updatedAt = moment()
     return callback() unless @_hasRssiChanged() || @_hasProximityChanged()
     {@rssi, @proximity} = @beacon
-    @_emitData @beacon, callback
+    @_emitData @beacon
 
-  _emitData: (data, callback=_.noop) =>
+  _emitData: (data) =>
     fields = [
       'uuid'
       'major'
@@ -71,6 +70,5 @@ class Beacon extends EventEmitter
       'proximity'
     ]
     @_emit 'data', _.pick data, fields
-    callback()
 
 module.exports = Beacon
