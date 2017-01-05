@@ -7,15 +7,14 @@ class Beacon extends EventEmitter
     @_emit = _.throttle @emit, 500, {leading: true, trailing: false}
     @_initializeGoneInterval()
 
-  initialize: =>
-    @_emitData @beacon, true
-
-  close: =>
+  initialize:  => 
+    @_emitData @beacon
+    
+  close: () =>
     clearInterval @_intervalGone
-    @beacon.major = -1 # Mark this class for destruction
 
-  isAlive: =>
-    return true unless @beacon.major == -1
+  isAlive: () =>
+    return true unless @isGone
     return false
 
   is: (matchBeacon) =>
@@ -29,7 +28,7 @@ class Beacon extends EventEmitter
     return false unless @broadcastProximityChange
     return true unless @proximity?
     return true unless @beacon?.proximity?
-    @proximity != @beacon.proximity
+    @proximity != @beacon.proximity   
 
   _hasRssiChanged: =>
     return false unless @broadcastRssiChange
@@ -38,12 +37,16 @@ class Beacon extends EventEmitter
     ! _.inRange @beacon.rssi, @rssi - @rssiDelta, @rssi + @rssiDelta
 
   _initializeGoneInterval: =>
+    @isGone = false
     return unless @timeout > 0
     @_intervalGone = setInterval @_checkIfGone, 500
 
   _checkIfGone: =>
     since = moment().subtract @timeout, 'seconds'
     return if moment(@updatedAt).isAfter since
+    @isGone = true
+    @rssi = 0
+    @proximity = 'gone'
     defaults =
       proximity: 'gone'
       measuredPower: 0
@@ -52,10 +55,12 @@ class Beacon extends EventEmitter
     @_emitData _.defaults defaults, @beacon
     @close()
 
-  update: (@beacon) =>
+  update: (@beacon, callback=_.noop) =>
     return unless @beacon?
     @updatedAt = moment()
-    return unless @_hasRssiChanged() || @_hasProximityChanged()
+    if @isGone 
+        @_initializeGoneInterval() 
+    return callback() unless @_hasRssiChanged() || @_hasProximityChanged()
     {@rssi, @proximity} = @beacon
     @_emitData @beacon
 
@@ -70,5 +75,6 @@ class Beacon extends EventEmitter
       'proximity'
     ]
     @_emit 'data', _.pick data, fields
+
 
 module.exports = Beacon

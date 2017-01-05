@@ -19,7 +19,7 @@ class BeaconManager extends EventEmitter
     @_intervalCleanup = setInterval @cleanupArray, 10 * 1000  # Check every 10 sec if we need to cleanup the array 
 
   cleanupArray: =>
-    @beacons = _.reject @beacons, { major: -1 }
+    @beacons = _.reject @beacons, { isGone: true }
 
   clearBeacons: (callback) =>
     async.each @beacons, (beacon, done) =>
